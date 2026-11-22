@@ -123,3 +123,25 @@
 - 新会话中，用户可以只说“继续 System Design Academy”。老师应优先读取 GitHub 最新版 ACADEMY_CONTEXT.md，恢复进度并进行简短回忆检查，然后从记录的下一步继续。
 - 新会话不保证自动继承旧聊天的全部逐字历史；需要保留的学习证据、推导结论和未完成问题必须写入本文件或对应课程讲义。
 - 本地副本尚未建立时，以 GitHub master 上已验证版本为权威；不能声称本地文件已同步或已更新。
+
+
+## 16. 本地工作区策略：Git Sparse Checkout
+- 用户确认本地只需要检出 GitHub 仓库中的 `my-learning/`，不需要完整克隆/检出 System Design Primer 的全部教材文件。
+- 推荐使用 Git Sparse Checkout：保留仓库 Git 元数据和正常分支历史/同步能力，工作区只检出 `my-learning/`。
+- 目标本地结构：`Desktop/System Design Academy/system-design-primer/my-learning/ACADEMY_CONTEXT.md`（实际桌面路径以当前 Windows 环境检查为准）。
+- 推荐初始化命令（先确认目标目录不存在；不要覆盖已有目录）：
+  ```powershell
+  cd "$HOME\\Desktop"
+  mkdir "System Design Academy"
+  cd "System Design Academy"
+  git clone --filter=blob:none --sparse https://github.com/zengjunhao-zjh/system-design-primer.git
+  cd system-design-primer
+  git sparse-checkout set my-learning
+  git switch master
+  ```
+- 注意：若 clone 已默认检出 master，保持 master；不要无必要切换。若远端分支状态不同，先检查再操作。
+- 日常只需维护 `my-learning/ACADEMY_CONTEXT.md`；学习资料按用户需要另行创建，但核心教学记忆仍只有这一份。
+- 日常课程结束只更新本地文件，不自动 push。用户说“同步 GitHub”“我要换电脑”或明确要求时，再执行 git status、add、commit、push，并验证远端。
+- 新电脑使用相同 sparse checkout 初始化；已有本地仓库先 `git pull origin master`。
+- Primer 原始教材通过已连接的 GitHub 读取，不要求本地完整检出。
+- 当前本地工作区尚未实际创建；Windows Desktop Work 曾返回通用错误，网页版 Work 测试结果尚未反馈。不得声称本地 Clone 或 sparse checkout 已完成。
