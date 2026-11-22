@@ -145,3 +145,18 @@
 - 新电脑使用相同 sparse checkout 初始化；已有本地仓库先 `git pull origin master`。
 - Primer 原始教材通过已连接的 GitHub 读取，不要求本地完整检出。
 - 当前本地工作区尚未实际创建；Windows Desktop Work 曾返回通用错误，网页版 Work 测试结果尚未反馈。不得声称本地 Clone 或 sparse checkout 已完成。
+
+
+## 17. Sparse Checkout 精确检出规则
+- 本地初始化必须使用能够在用户当前 Windows 电脑上运行 PowerShell、访问真实桌面和本地文件的会话。普通聊天或没有本机文件权限的 Work 云端环境不能声称完成本地初始化。
+- 用户要求工作区只检出 `my-learning/`，不保留仓库根目录其他受跟踪文件。默认 cone 模式 `git sparse-checkout set my-learning` 可能仍保留根目录受跟踪文件，因此不满足本项目的严格验收要求。
+- 应使用非 cone 模式精确检出：
+  ```powershell
+  git sparse-checkout init --no-cone
+  git sparse-checkout set --no-cone '/my-learning/'
+  ```
+- 若 clone 时已启用 `--sparse`，先检查当前 sparse 配置；再按上述方式切换。不要盲目重复初始化。
+- 验收时检查实际工作区目录，确认根目录仅出现 `my-learning/`（以及 Git 必需的隐藏元数据不计入工作树），并确认 `my-learning/ACADEMY_CONTEXT.md` 存在。
+- 使用 `git pull --ff-only origin master` 验证同步；先检查工作区是否干净，避免覆盖本地修改。
+- 课程仍停留在 Stage 0：待能力诊断。完成本地初始化不等于开始或通过课程阶段；须等待用户确认后再开始。
+- 日常学习结束只更新本地记忆文件，不自动 Push。只有用户明确要求同步或换电脑时才执行 Commit/Push。
